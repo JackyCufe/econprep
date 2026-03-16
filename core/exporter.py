@@ -46,10 +46,19 @@ def export_stata(df: pd.DataFrame) -> bytes:
         for col in df_clean.columns
     ]
 
-    buffer = io.BytesIO()
+    import tempfile
+    import os
+
+    # pyreadstat.write_dta 不支持 BytesIO，必须写入临时文件再读取为 bytes
     try:
-        pyreadstat.write_dta(df_clean, buffer)
+        with tempfile.NamedTemporaryFile(suffix=".dta", delete=False) as tmp:
+            tmp_path = tmp.name
+        pyreadstat.write_dta(df_clean, tmp_path)
+        with open(tmp_path, "rb") as f:
+            data = f.read()
+        return data
     except Exception as e:
         raise RuntimeError(f"导出 Stata 文件失败：{e}") from e
-
-    return buffer.getvalue()
+    finally:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)

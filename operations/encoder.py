@@ -49,10 +49,15 @@ def create_year_dummies(
         raise KeyError(f"列不存在：{time_col}")
 
     new_df = df.copy()
-    try:
-        years = pd.to_datetime(new_df[time_col], errors="coerce").dt.year
-    except Exception:
-        years = new_df[time_col].astype(str).str[:4]
+    col = new_df[time_col]
+    # 若已是整数列（如 2020、2021），直接使用；避免 pd.to_datetime 将整数解释为 epoch 时间戳
+    if pd.api.types.is_integer_dtype(col) or pd.api.types.is_float_dtype(col):
+        years = col.astype("Int64")
+    else:
+        try:
+            years = pd.to_datetime(col, errors="coerce").dt.year
+        except Exception:
+            years = col.astype(str).str[:4]
 
     temp_col = "__year_temp__"
     new_df[temp_col] = years
