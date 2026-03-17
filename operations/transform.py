@@ -52,6 +52,18 @@ def log_transform(
     for var in variables:
         series = new_df[var].astype(float)
         values = series + 1 if add_one else series
+
+        # 检测非正值：log 对 <=0 无定义，静默产生 NaN 会误导用户
+        n_nonpositive = int((values <= 0).sum())
+        if n_nonpositive > 0:
+            import warnings as _w
+            _w.warn(
+                f"变量 '{var}' 含 {n_nonpositive} 个 ≤0 的值（{'add_one=True 后仍有' if add_one else ''}），"
+                f"对数化结果将为 NaN。建议使用 add_one=True（计算 log(1+x)）或先过滤非正值。",
+                UserWarning,
+                stacklevel=2,
+            )
+
         new_col = f"{var}{suffix}"
         new_df[new_col] = log_fn(values)
         new_cols.append(new_col)
