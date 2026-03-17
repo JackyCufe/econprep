@@ -1,3 +1,21 @@
+---
+title: EconPrep 学术数据清洗工具
+emoji: 🧹
+colorFrom: green
+colorTo: teal
+sdk: streamlit
+sdk_version: "1.32.0"
+app_file: app.py
+pinned: false
+license: MIT
+tags:
+  - econometrics
+  - data-cleaning
+  - panel-data
+  - streamlit
+  - python
+---
+
 # 🧹 EconPrep — 学术论文数据清洗工具
 
 > 「上传 CSV/Excel → 选择清洗操作 → 下载干净数据」
