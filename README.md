@@ -18,9 +18,20 @@ tags:
 
 # 🧹 EconPrep — 学术论文数据清洗工具
 
-> 「上传 CSV/Excel → 选择清洗操作 → 下载干净数据」
+**Academic Data Cleaning Toolkit for Econometrics & Social Science Research**
 
-EconPrep 是专为经济学、管理学等社会科学研究者设计的学术数据预处理工具，与 **EconKit**（实证分析工具）形成完整的数据处理 → 实证分析闭环。
+> 「上传 CSV/Excel → 选择清洗操作 → 下载干净数据」，告别 Stata do 文件手动清洗
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Built%20with-Streamlit-red.svg)](https://streamlit.io/)
+[![ModelScope](https://img.shields.io/badge/🤖_Demo-ModelScope-624aff)](https://modelscope.cn/studios/JackyCufe/EconPrep)
+
+**🚀 在线体验（无需安装）：**
+- 🤖 [ModelScope Studio](https://modelscope.cn/studios/JackyCufe/EconPrep)（国内推荐）
+- 🤗 [HuggingFace Space](https://huggingface.co/spaces/JackyCufe/EconPrep)（国际）
+
+EconPrep 是专为**经济学、管理学、社会科学**研究者设计的学术数据预处理工具，覆盖缺失值处理、缩尾、对数化、差分、固定效应虚拟变量等计量研究必备操作，与 **EconKit**（实证分析）、**EconChart**（图表美化）形成完整的研究数据工作流。
 
 ---
 
