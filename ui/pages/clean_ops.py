@@ -63,7 +63,9 @@ def op_log_transform(df, push_history, log_op) -> None:
     st.markdown("**对数化**")
     vars_sel = st.multiselect("选择变量", _numeric_cols(df), key="log_vars")
     c1, c2 = st.columns(2)
-    method = c1.selectbox("对数方法", ["ln", "log10", "log2"], key="log_method")
+    METHOD_LABELS = {"自然对数 ln": "ln", "常用对数 log10": "log10", "二进制对数 log2": "log2"}
+    method_label = c1.selectbox("对数方法", list(METHOD_LABELS.keys()), key="log_method")
+    method = METHOD_LABELS[method_label]
     add_one = c2.checkbox("log(1+x)", value=False, key="log_addone")
     if st.button("执行对数化", key="btn_log") and vars_sel:
         try:
@@ -81,7 +83,9 @@ def op_log_transform(df, push_history, log_op) -> None:
 def op_standardize(df, push_history, log_op) -> None:
     st.markdown("**标准化**")
     vars_sel = st.multiselect("选择变量", _numeric_cols(df), key="std_vars")
-    method = st.selectbox("方法", ["zscore", "minmax"], key="std_method")
+    STD_LABELS = {"Z-Score 标准化": "zscore", "Min-Max 归一化": "minmax"}
+    std_label = st.selectbox("方法", list(STD_LABELS.keys()), key="std_method")
+    method = STD_LABELS[std_label]
     if st.button("执行标准化", key="btn_std") and vars_sel:
         try:
             push_history(df)
@@ -100,7 +104,9 @@ def op_lag_lead(df, push_history, log_op) -> None:
     id_col, time_col = _panel_defaults(df)
     vars_sel = st.multiselect("选择变量", _numeric_cols(df), key="ll_vars")
     c1, c2, c3 = st.columns(3)
-    op_type = c1.selectbox("类型", ["lag", "lead", "first_diff"], key="ll_type")
+    OP_LABELS = {"滞后（Lag）": "lag", "超前（Lead）": "lead", "一阶差分": "first_diff"}
+    op_label = c1.selectbox("类型", list(OP_LABELS.keys()), key="ll_type")
+    op_type = OP_LABELS[op_label]
     periods = c2.number_input("阶数", 1, 20, 1, key="ll_periods")
     id_input = c3.text_input("ID 列", value=id_col or "", key="ll_id")
     time_input = st.text_input("时间列", value=time_col or "", key="ll_time")
@@ -127,12 +133,17 @@ def op_missing(df, push_history, log_op) -> None:
     st.markdown("**缺失值处理**")
     id_col, _ = _panel_defaults(df)
     vars_sel = st.multiselect("选择变量", _all_cols(df), key="miss_vars")
-    method = st.selectbox(
-        "方法",
-        ["drop_row", "fill_mean", "fill_median", "fill_zero", "ffill", "bfill"],
-        key="miss_method",
-    )
-    id_input = st.text_input("ID 列（ffill/bfill）", value=id_col or "", key="miss_id")
+    MISS_LABELS = {
+        "删除含缺失行": "drop_row",
+        "均值填充": "fill_mean",
+        "中位数填充": "fill_median",
+        "填充为 0": "fill_zero",
+        "向前填充（面板数据）": "ffill",
+        "向后填充（面板数据）": "bfill",
+    }
+    miss_label = st.selectbox("方法", list(MISS_LABELS.keys()), key="miss_method")
+    method = MISS_LABELS[miss_label]
+    id_input = st.text_input("ID 列（向前/向后填充时需要）", value=id_col or "", key="miss_id")
     if st.button("执行缺失值处理", key="btn_miss") and vars_sel:
         id_c = id_input.strip() or None
         try:
