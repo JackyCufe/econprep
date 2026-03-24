@@ -192,42 +192,31 @@ def render_clean_page() -> None:
             st.session_state["page"] = "upload"
             st.rerun()
 
-    # ── 数据概览（顶部一行）
-    render_data_stats(df)
-    render_data_preview(df)
+    left_col, right_col = st.columns([2, 1])
 
-    st.divider()
+    with left_col:
+        render_data_stats(df)
+        render_data_preview(df)
 
-    # ── 操作面板（横向标签页，不再用侧边竖列）
-    st.markdown("#### ⚙️ 操作面板")
+    with right_col:
+        st.markdown("#### ⚙️ 操作面板")
 
-    tabs = st.tabs([
-        "🔴 缺失值", "✂️ 缩尾", "📐 对数化", "📏 标准化",
-        "⏱️ 差分/滞后", "🏷️ 虚拟变量", "🔤 字符串", "✖️ 交互项"
-    ])
+        with st.expander("🔴 缺失值处理", expanded=False):
+            clean_ops.op_missing(df, _push_history, _log_operation)
+        with st.expander("✂️ 缩尾（Winsorize）", expanded=False):
+            clean_ops.op_winsorize(df, _push_history, _log_operation)
+        with st.expander("📐 对数化", expanded=False):
+            clean_ops.op_log_transform(df, _push_history, _log_operation)
+        with st.expander("📏 标准化", expanded=False):
+            clean_ops.op_standardize(df, _push_history, _log_operation)
+        with st.expander("⏱️ 差分 / 滞后 / 超前", expanded=False):
+            clean_ops.op_lag_lead(df, _push_history, _log_operation)
+        with st.expander("🏷️ 虚拟变量", expanded=False):
+            clean_ops.op_dummies(df, _push_history, _log_operation)
+        with st.expander("🔤 字符串清洗", expanded=False):
+            clean_ops.op_string_clean(df, _push_history, _log_operation)
+        with st.expander("✖️ 交互项", expanded=False):
+            clean_ops.op_interaction(df, _push_history, _log_operation)
 
-    with tabs[0]:
-        clean_ops.op_missing(df, _push_history, _log_operation)
-    with tabs[1]:
-        clean_ops.op_winsorize(df, _push_history, _log_operation)
-    with tabs[2]:
-        clean_ops.op_log_transform(df, _push_history, _log_operation)
-    with tabs[3]:
-        clean_ops.op_standardize(df, _push_history, _log_operation)
-    with tabs[4]:
-        clean_ops.op_lag_lead(df, _push_history, _log_operation)
-    with tabs[5]:
-        clean_ops.op_dummies(df, _push_history, _log_operation)
-    with tabs[6]:
-        clean_ops.op_string_clean(df, _push_history, _log_operation)
-    with tabs[7]:
-        clean_ops.op_interaction(df, _push_history, _log_operation)
-
-    st.divider()
-
-    # ── 历史 + 导出（底部）
-    col_hist, col_export = st.columns([1, 1])
-    with col_hist:
         _render_history_section()
-    with col_export:
         _render_export_section(df)
