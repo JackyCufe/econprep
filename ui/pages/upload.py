@@ -23,17 +23,11 @@ def _init_session_state() -> None:
             st.session_state[key] = val
 
 
-def render_upload_page() -> None:
-    """渲染文件上传页。"""
-    _init_session_state()
-
-    st.markdown("## 🧹 EconPrep — 学术数据清洗工具")
-    st.markdown(
-        "上传您的数据文件，EconPrep 将帮助您完成缩尾、对数化、缺失值处理等学术数据清洗操作。"
-    )
-
-    st.divider()
-
+# ── Fragment：上传 + 结果展示区 ────────────────────────────────────────────────
+# st.fragment 让上传后只重渲染这一个区域，不触发整页 reflow → 减少 CLS
+# 跳页（到 clean 页）需要 st.rerun(scope="app") 触发全页刷新
+@st.fragment
+def _upload_fragment() -> None:
     uploaded_file = st.file_uploader(
         "上传数据文件（CSV / Excel）",
         type=["csv", "xlsx", "xls"],
@@ -44,6 +38,19 @@ def render_upload_page() -> None:
         _handle_upload(uploaded_file)
 
     _render_format_tips()
+
+
+def render_upload_page() -> None:
+    """渲染文件上传页。"""
+    _init_session_state()
+
+    st.markdown("## 🧹 EconPrep — 学术数据清洗工具")
+    st.markdown(
+        "上传您的数据文件，EconPrep 将帮助您完成缩尾、对数化、缺失值处理等学术数据清洗操作。"
+    )
+
+    st.divider()
+    _upload_fragment()
 
 
 def _handle_upload(uploaded_file) -> None:
@@ -73,7 +80,8 @@ def _handle_upload(uploaded_file) -> None:
             st.session_state["filename"] = uploaded_file.name
             st.session_state["panel_info"] = panel_info
             st.session_state["page"] = "clean"
-            st.rerun()
+            # scope="app" 从 fragment 内触发全页刷新，实现跳页
+            st.rerun(scope="app")
 
 
 def _render_summary_cards(summary: dict) -> None:
