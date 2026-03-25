@@ -27,6 +27,16 @@ def render_upload_page() -> None:
     """渲染文件上传页。"""
     _init_session_state()
 
+    # 注入 CSS：结果区预留最小高度，防止上传后内容从 0 高度硬跳出（减少 CLS）
+    st.markdown(
+        """
+        <style>
+        .ep-result-area { min-height: 200px; }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
     st.markdown("## 🧹 EconPrep — 学术数据清洗工具")
     st.markdown(
         "上传您的数据文件，EconPrep 将帮助您完成缩尾、对数化、缺失值处理等学术数据清洗操作。"
@@ -40,8 +50,11 @@ def render_upload_page() -> None:
         help="支持 UTF-8 / GBK 编码的 CSV，以及 .xlsx / .xls 格式",
     )
 
+    # 结果区占位容器：无论是否上传都保持最小高度
+    st.markdown('<div class="ep-result-area">', unsafe_allow_html=True)
     if uploaded_file is not None:
         _handle_upload(uploaded_file)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     _render_format_tips()
 
