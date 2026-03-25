@@ -50,11 +50,23 @@ def render_upload_page() -> None:
         help="支持 UTF-8 / GBK 编码的 CSV，以及 .xlsx / .xls 格式",
     )
 
-    # 结果区占位容器：无论是否上传都保持最小高度
-    st.markdown('<div class="ep-result-area">', unsafe_allow_html=True)
-    if uploaded_file is not None:
-        _handle_upload(uploaded_file)
-    st.markdown('</div>', unsafe_allow_html=True)
+    # 固定高度区域：空状态显示虚线占位框，防止上传后内容从 0 高度跳出（减少 CLS）
+    with st.container():
+        if uploaded_file is not None:
+            _handle_upload(uploaded_file)
+        else:
+            st.markdown(
+                """
+                <div style="min-height:340px; display:flex; align-items:center;
+                            justify-content:center; color:#ced4da;
+                            border:2px dashed #dee2e6; border-radius:8px;
+                            margin:1rem 0; flex-direction:column; gap:8px;">
+                    <div style="font-size:2rem">📂</div>
+                    <div style="font-size:0.9rem">上传文件后，此处显示数据概况</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
     _render_format_tips()
 
