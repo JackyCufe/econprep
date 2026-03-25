@@ -147,3 +147,38 @@ h1, h2, h3 {
 section[data-testid="stSidebar"] {
     min-height: 100vh;
 }
+
+/* ── 深度反抖动（2026-03-25 实测补丁）──────────────────────────
+ * 实测 CLS 0.21，主因：
+ *   - stMainBlockContainer 上传后从 256→582px 高度突变（CLS 0.16）
+ *   - metric 卡片行 + expander 插入时上方内容被推移（CLS 0.10）
+ */
+div[data-testid="stMainBlockContainer"] {
+    contain: layout style !important;
+    will-change: transform;
+    min-height: 80vh;
+}
+
+div[data-testid="stVerticalBlockBorderWrapper"] {
+    contain: layout;
+    overflow-anchor: none;
+}
+
+/* metric 卡片行稳定（上传结果出现时） */
+div[data-testid="stHorizontalBlock"] {
+    min-height: 60px;
+    overflow-anchor: none;
+}
+
+/* dataframe 占位 */
+div[data-testid="stDataFrame"],
+div[data-testid="stTable"] {
+    min-height: 100px;
+    overflow-anchor: none;
+}
+
+/* success/info/warning alert 稳定高度 */
+div[data-testid="stAlert"] {
+    min-height: 44px;
+    overflow-anchor: none;
+}
