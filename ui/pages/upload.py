@@ -23,19 +23,6 @@ def _init_session_state() -> None:
             st.session_state[key] = val
 
 
-@st.fragment
-def _upload_fragment() -> None:
-    """上传区 + 结果区：用 fragment 局部刷新，上传后只重渲染此区域，不触发全页重排（减少 CLS）"""
-    uploaded_file = st.file_uploader(
-        "上传数据文件（CSV / Excel）",
-        type=["csv", "xlsx", "xls"],
-        help="支持 UTF-8 / GBK 编码的 CSV，以及 .xlsx / .xls 格式",
-    )
-    if uploaded_file is not None:
-        _handle_upload(uploaded_file)
-    _render_format_tips()
-
-
 def render_upload_page() -> None:
     """渲染文件上传页。"""
     _init_session_state()
@@ -46,7 +33,17 @@ def render_upload_page() -> None:
     )
 
     st.divider()
-    _upload_fragment()
+
+    uploaded_file = st.file_uploader(
+        "上传数据文件（CSV / Excel）",
+        type=["csv", "xlsx", "xls"],
+        help="支持 UTF-8 / GBK 编码的 CSV，以及 .xlsx / .xls 格式",
+    )
+
+    if uploaded_file is not None:
+        _handle_upload(uploaded_file)
+
+    _render_format_tips()
 
 
 def _handle_upload(uploaded_file) -> None:
