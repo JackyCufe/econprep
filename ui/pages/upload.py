@@ -23,19 +23,22 @@ def _init_session_state() -> None:
             st.session_state[key] = val
 
 
+@st.fragment
+def _upload_fragment() -> None:
+    """上传区 + 结果区：用 fragment 局部刷新，上传后只重渲染此区域，不触发全页重排（减少 CLS）"""
+    uploaded_file = st.file_uploader(
+        "上传数据文件（CSV / Excel）",
+        type=["csv", "xlsx", "xls"],
+        help="支持 UTF-8 / GBK 编码的 CSV，以及 .xlsx / .xls 格式",
+    )
+    if uploaded_file is not None:
+        _handle_upload(uploaded_file)
+    _render_format_tips()
+
+
 def render_upload_page() -> None:
     """渲染文件上传页。"""
     _init_session_state()
-
-    # 注入 CSS：结果区预留最小高度，防止上传后内容从 0 高度硬跳出（减少 CLS）
-    st.markdown(
-        """
-        <style>
-        .ep-result-area { min-height: 200px; }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
 
     st.markdown("## 🧹 EconPrep — 学术数据清洗工具")
     st.markdown(
@@ -43,27 +46,7 @@ def render_upload_page() -> None:
     )
 
     st.divider()
-
-    uploaded_file = st.file_uploader(
-        "上传数据文件（CSV / Excel）",
-        type=["csv", "xlsx", "xls"],
-        help="支持 UTF-8 / GBK 编码的 CSV，以及 .xlsx / .xls 格式",
-    )
-
-    # 用纯 Streamlit 组件占位（ModelScope iframe 过滤 HTML/CSS，只有原生组件可靠）
-    # 空状态预渲染 4 个 metric + 1 个 info，高度与上传后接近，防 CLS
-    with st.container():
-        if uploaded_file is not None:
-            _handle_upload(uploaded_file)
-        else:
-            c1, c2, c3, c4 = st.columns(4)
-            c1.metric("行数", "—")
-            c2.metric("列数", "—")
-            c3.metric("数值列", "—")
-            c4.metric("含缺失列", "—")
-            st.info("📂 请在上方上传数据文件，支持 CSV / Excel")
-
-    _render_format_tips()
+    _upload_fragment()
 
 
 def _handle_upload(uploaded_file) -> None:
