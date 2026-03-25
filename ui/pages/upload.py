@@ -50,19 +50,20 @@ def render_upload_page() -> None:
         help="支持 UTF-8 / GBK 编码的 CSV，以及 .xlsx / .xls 格式",
     )
 
-    # 固定高度区域：空状态显示虚线占位框，防止上传后内容从 0 高度跳出（减少 CLS）
+    # 固定高度区域：空状态预占 344px（实测上传后内容高度），使容器高度变化接近 0
     with st.container():
         if uploaded_file is not None:
             _handle_upload(uploaded_file)
         else:
             st.markdown(
                 """
-                <div style="min-height:340px; display:flex; align-items:center;
+                <div style="height:344px; display:flex; align-items:center;
                             justify-content:center; color:#ced4da;
                             border:2px dashed #dee2e6; border-radius:8px;
-                            margin:1rem 0; flex-direction:column; gap:8px;">
+                            margin:1rem 0; flex-direction:column; gap:8px;
+                            box-sizing:border-box;">
                     <div style="font-size:2rem">📂</div>
-                    <div style="font-size:0.9rem">上传文件后，此处显示数据概况</div>
+                    <div style="font-size:0.9rem">上传文件后，此处显示数据概况与清洗入口</div>
                 </div>
                 """,
                 unsafe_allow_html=True,
