@@ -16,6 +16,99 @@ tags:
   - python
 ---
 
+# 🧹 EconPrep
+
+**Academic Data Cleaning Toolkit for Econometrics & Social Science Research**
+
+Upload CSV/Excel → Select cleaning operations → Download clean data. No more manual Stata do-files.
+
+> Say goodbye to repetitive data cleaning scripts. EconPrep covers everything: missing values, winsorization, log transformation, lagging, dummies, and more.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Built%20with-Streamlit-red.svg)](https://streamlit.io/)
+[![ModelScope](https://img.shields.io/badge/🤖_Demo-ModelScope-624aff)](https://modelscope.cn/studios/JackyCufe/EconPrep)
+
+**🚀 Live Demo (no install):**
+- 🤖 [ModelScope Studio](https://modelscope.cn/studios/JackyCufe/EconPrep) — China (Recommended)
+- 🤗 [HuggingFace Space](https://huggingface.co/spaces/JackyCufe/EconPrep) — Global
+
+---
+
+## ✨ Features
+
+### Data Loading
+- ✅ CSV (UTF-8 / GBK / GB18030 / Latin-1 auto-detected)
+- ✅ Excel (`.xlsx` / `.xls`)
+- ✅ Auto-detects panel data structure (ID / time columns)
+- ✅ Data overview (rows, columns, missing value stats)
+
+### Cleaning Operations
+
+| Operation | Description |
+|-----------|-------------|
+| **Missing Values** | Drop rows, fill with mean/median/zero, forward/backward fill (grouped by panel ID) |
+| **Winsorize** | Clip extreme values by quantile, customizable upper/lower bounds |
+| **Log Transform** | ln / log10 / log2, supports log(1+x) |
+| **Standardize** | Z-score normalization / Min-Max scaling |
+| **Lag / Lead / Diff** | First-difference, any-order lag/lead, grouped by panel ID |
+| **Dummy Variables** | Categorical dummies / year FE / industry FE |
+| **String Cleaning** | Trim whitespace, case conversion, remove punctuation/digits, regex replace |
+| **Interaction Terms** | Multiply two variables to create interaction terms |
+
+### Key UX Features
+- 🔄 **Undo**: Up to 10 steps of operation history, one-click revert
+- 🛡️ **Non-destructive**: All operations create new columns, original data untouched
+- 📋 **Operation Script**: Auto-generates reproducible Python code
+- 💾 **Export formats**: CSV / Excel / Stata `.dta`
+
+---
+
+## 🚀 Quick Start
+
+```bash
+cd econprep
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+Open http://localhost:8501.
+
+---
+
+## 🔗 Works with EconKit
+
+```
+Raw Data
+   ↓
+[EconPrep] Data Cleaning
+  · Handle missing values
+  · Winsorize
+  · Generate controls (log, standardize)
+  · Dummies (year / industry FE)
+   ↓
+Clean Data (CSV / Excel / Stata .dta)
+   ↓
+[EconKit] Empirical Analysis
+  · OLS / Panel FE
+  · IV / 2SLS
+  · Descriptive statistics
+```
+
+---
+
+## 🛠️ Tech Stack
+
+- **Streamlit** ≥ 1.32 — UI
+- **pandas** ≥ 2.0 — Data processing
+- **scipy** ≥ 1.11 — Scientific computing
+- **pyreadstat** ≥ 1.2 — Stata file I/O
+- **openpyxl** ≥ 3.1 — Excel export
+- **chardet** ≥ 5.2 — Encoding auto-detection
+
+---
+---
+
 # 🧹 EconPrep — 学术论文数据清洗工具
 
 **Academic Data Cleaning Toolkit for Econometrics & Social Science Research**
@@ -25,13 +118,10 @@ tags:
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Built%20with-Streamlit-red.svg)](https://streamlit.io/)
-[![ModelScope](https://img.shields.io/badge/🤖_Demo-ModelScope-624aff)](https://modelscope.cn/studios/JackyCufe/EconPrep)
 
 **🚀 在线体验（无需安装）：**
 - 🤖 [ModelScope Studio](https://modelscope.cn/studios/JackyCufe/EconPrep)（国内推荐）
 - 🤗 [HuggingFace Space](https://huggingface.co/spaces/JackyCufe/EconPrep)（国际）
-
-EconPrep 是专为**经济学、管理学、社会科学**研究者设计的学术数据预处理工具，覆盖缺失值处理、缩尾、对数化、差分、固定效应虚拟变量等计量研究必备操作，与 **EconKit**（实证分析）、**EconChart**（图表美化）形成完整的研究数据工作流。
 
 ---
 
@@ -44,6 +134,7 @@ EconPrep 是专为**经济学、管理学、社会科学**研究者设计的学�
 - ✅ 数据概况展示（行数、列数、缺失值统计）
 
 ### 数据清洗操作
+
 | 操作 | 说明 |
 |------|------|
 | **缺失值处理** | 删除行、均值/中位数/零填充、前向/后向填充（面板数据支持分组） |
@@ -66,13 +157,8 @@ EconPrep 是专为**经济学、管理学、社会科学**研究者设计的学�
 ## 🚀 快速开始
 
 ```bash
-# 1. 克隆或进入项目目录
 cd econprep
-
-# 2. 安装依赖
 pip install -r requirements.txt
-
-# 3. 启动应用
 streamlit run app.py
 ```
 
@@ -82,78 +168,25 @@ streamlit run app.py
 
 ## 🔗 与 EconKit 配合使用
 
-EconPrep + EconKit 构成完整的学术研究数据工作流：
-
 ```
 原始数据
    ↓
 [EconPrep] 数据清洗
-  · 缺失值处理
-  · 缩尾处理
-  · 生成控制变量（对数化、标准化）
-  · 虚拟变量（年份 / 行业固定效应）
+  · 缺失值处理 / 缩尾 / 对数化 / 虚拟变量
    ↓
 干净数据（CSV / Excel / Stata .dta）
    ↓
 [EconKit] 实证分析
-  · OLS / 面板固定效应回归
-  · 工具变量 / 2SLS
-  · 描述性统计
-  · 相关性分析
-```
-
-**推荐工作流：**
-1. 在 EconPrep 完成数据预处理，导出 `.dta` 或 `.csv`
-2. 在 EconKit 中加载清洗后数据，进行计量经济学分析
-3. 使用 EconPrep 生成的「操作脚本」记录数据处理过程，确保研究可复现
-
----
-
-## 📁 项目结构
-
-```
-econprep/
-├── app.py                     # Streamlit 入口
-├── requirements.txt
-├── README.md
-├── core/
-│   ├── data_loader.py         # 数据加载 & 面板识别
-│   └── exporter.py            # 多格式导出
-├── operations/
-│   ├── winsorize.py           # 缩尾处理
-│   ├── transform.py           # 变换（对数/标准化/差分/滞后）
-│   ├── missing.py             # 缺失值处理
-│   ├── encoder.py             # 虚拟变量
-│   └── string_clean.py        # 字符串清洗
-├── ui/
-│   ├── components/
-│   │   ├── preview.py         # 数据预览组件
-│   │   └── operation_card.py  # 操作卡片组件
-│   └── pages/
-│       ├── upload.py          # 上传页
-│       ├── clean.py           # 清洗主页
-│       └── export.py          # 导出页
-└── assets/
-    └── style.css
+  · OLS / 面板固定效应 / IV / 描述统计
 ```
 
 ---
 
 ## 🛠️ 技术栈
 
-- **[Streamlit](https://streamlit.io/)** ≥ 1.32 — 界面框架
-- **[pandas](https://pandas.pydata.org/)** ≥ 2.0 — 数据处理
-- **[scipy](https://scipy.org/)** ≥ 1.11 — 科学计算
-- **[pyreadstat](https://github.com/Roche/pyreadstat)** ≥ 1.2 — Stata 文件读写
-- **[openpyxl](https://openpyxl.readthedocs.io/)** ≥ 3.1 — Excel 导出
-- **[chardet](https://github.com/chardet/chardet)** ≥ 5.2 — 编码自动检测
-
----
-
-## 📌 工程规范
-
-本项目遵循 **deepvcode** 工程规范：
-- 单文件 200-400 行，函数 ≤ 50 行
-- 防御性编程：快速失败，绝不静默吞噬错误
-- 非破坏性操作：永远创建新对象，禁止原地修改
-- 语义化 Git commit
+- **Streamlit** ≥ 1.32 — 界面框架
+- **pandas** ≥ 2.0 — 数据处理
+- **scipy** ≥ 1.11 — 科学计算
+- **pyreadstat** ≥ 1.2 — Stata 文件读写
+- **openpyxl** ≥ 3.1 — Excel 导出
+- **chardet** ≥ 5.2 — 编码自动检测
